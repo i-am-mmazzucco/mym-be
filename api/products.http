@@ -1,0 +1,29 @@
+### Get all products
+GET {{url}}/products
+
+### Get a product by ID
+GET {{url}}/products/{{id}}
+
+### Create a new product
+POST {{url}}/products
+Content-Type: application/json
+
+{
+  "name": "Lavandina",
+  "price": 100,
+  "description": "Lavandina para lavar los platos",
+  "category": "Dtergente",
+  "lot": {
+    "unitOfMeasure": "l",
+    "quantity": 1
+  }
+}
+
+### Update a product by ID
+PATCH {{url}}/products/{{id}}
+Content-Type: application/json
+
+{
+  "name": "Updated Product",
+  "price": 150
+}
