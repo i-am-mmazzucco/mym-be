@@ -11,7 +11,7 @@ export class RoutesService {
     private routesRepository: Repository<Routes>,
   ) {}
 
-  async create(data: RouteDto[]) {
+  async create(data: RouteDto) {
     try {
       const routes = this.routesRepository.create(data);
       return this.routesRepository.save(routes);

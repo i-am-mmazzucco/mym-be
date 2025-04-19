@@ -1,17 +1,25 @@
-import { Users } from '../users/users.entity';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Routes {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column('numeric')
   latitude: number;
 
-  @Column()
+  @Column('numeric')
   longitude: number;
 
-  @ManyToOne(() => Users, (user) => user.routes)
-  user: Users;
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

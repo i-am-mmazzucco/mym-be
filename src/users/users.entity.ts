@@ -1,5 +1,13 @@
 import { Routes } from '../routes/routes.entity';
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToOne,
+  JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { randomPassword } from '../utils/password';
 
 @Entity()
@@ -25,9 +33,22 @@ export class Users {
   @Column()
   address: string;
 
+  @Column({ nullable: true })
+  image: string;
+
   @Column()
   role: 'CLIENT' | 'EMPLOYEE' | 'ADMIN';
 
-  @OneToMany(() => Routes, (route) => route.user)
-  routes: Routes[];
+  @OneToOne(() => Routes)
+  @JoinColumn()
+  route: Routes;
+
+  @Column({ nullable: true })
+  routeId: number;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

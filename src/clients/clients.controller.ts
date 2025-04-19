@@ -1,4 +1,3 @@
-// src/clients/clients.controller.ts
 import { Controller, Get, Post, Patch, Param, Body } from '@nestjs/common';
 import { ClientsService } from './clients.service';
 import { ClientDto } from './clients.dto';

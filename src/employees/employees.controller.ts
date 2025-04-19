@@ -1,6 +1,6 @@
-// src/employees/employees.controller.ts
 import { Controller, Get, Post, Patch, Param, Body } from '@nestjs/common';
 import { EmployeesService } from './employees.service';
+import { EmployeeDto, EmployeeUpdateDto } from './employee.dto';
 
 @Controller('employees')
 export class EmployeesController {
@@ -17,12 +17,15 @@ export class EmployeesController {
   }
 
   @Post()
-  createEmployee(@Body() employeeData: any) {
+  createEmployee(@Body() employeeData: EmployeeDto) {
     return this.employeesService.createEmployee(employeeData);
   }
 
   @Patch(':id')
-  updateEmployee(@Param('id') id: string, @Body() employeeData: any) {
-    return this.employeesService.updateEmployee(id, employeeData);
+  updateEmployee(
+    @Param('id') id: string,
+    @Body() employeeData: EmployeeUpdateDto,
+  ) {
+    return this.employeesService.updateEmployee(+id, employeeData);
   }
 }

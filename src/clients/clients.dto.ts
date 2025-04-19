@@ -1,13 +1,4 @@
-import { RouteDto } from '../routes/routes.dto';
-import {
-  IsString,
-  IsNotEmpty,
-  IsIn,
-  IsArray,
-  ValidateNested,
-  IsOptional,
-} from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsString, IsNotEmpty, IsIn, IsOptional } from 'class-validator';
 
 export class ClientDto {
   @IsString()
@@ -36,12 +27,6 @@ export class ClientDto {
 
   @IsIn(['CLIENT'])
   role: 'CLIENT';
-
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => RouteDto)
-  @IsOptional()
-  routes: RouteDto[];
 }
 
 export class ClientUpdateDto {
@@ -63,10 +48,4 @@ export class ClientUpdateDto {
   @IsString()
   @IsOptional()
   address: string;
-
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => RouteDto)
-  @IsOptional()
-  routes: RouteDto[];
 }

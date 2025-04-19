@@ -6,6 +6,8 @@ import { Users } from './users/users.entity';
 import { Routes } from './routes/routes.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Lot } from './lot/lot.entity';
+import { ClientsModule } from './clients/clients.module';
+import { EmployeesModule } from './employees/employees.module';
 
 @Module({
   imports: [
@@ -13,6 +15,8 @@ import { Lot } from './lot/lot.entity';
       isGlobal: true,
     }),
     ProductsModule,
+    ClientsModule,
+    EmployeesModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

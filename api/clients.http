@@ -1,0 +1,31 @@
+### Get all clients
+GET {{url}}/clients
+
+### Get a client by ID
+GET {{url}}/clients/{{id}}
+
+### Create a new client
+POST {{url}}/clients
+Content-Type: application/json
+
+{
+  "name": "John",
+  "lastName": "Doe",
+  "dni": "124435675",
+  "phone": "555-1234",
+  "address": "123 Main St"
+}
+
+### Update a client by ID
+PATCH {{url}}/clients/{{id}}
+Content-Type: application/json
+
+{
+  "name": "Jane",
+  "lastName": "Smith",
+  "dni": "87654321",
+  "phone": "555-5678",
+  "password": "newpassword",
+  "address": "456 Elm St",
+  "role": "CLIENT",
+}
