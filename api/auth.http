@@ -1,0 +1,21 @@
+### Register new user
+POST {{url}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
+
+### Login
+POST {{url}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
+
+### Example Protected Route (use token from login response)
+GET {{url}}/some-protected-route
+Authorization: Bearer YOUR_JWT_TOKEN 

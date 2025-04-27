@@ -18,18 +18,13 @@ export class UsersService {
       where: { role: 'CLIENT' },
     });
 
-    return users.map((user) => {
-      delete user?.password;
-      return user;
-    });
+    return users;
   }
 
   async findClient(id: number) {
     const user = await this.userRepository.findOne({
       where: { id, role: 'CLIENT' },
     });
-
-    delete user?.password;
 
     return user;
   }
@@ -39,16 +34,12 @@ export class UsersService {
       where: { dni, role: 'CLIENT' },
     });
 
-    delete user?.password;
-
     return user;
   }
 
   async createClient(body: ClientDto) {
     const newClient = this.userRepository.create(body);
     const savedClient = await this.userRepository.save(newClient);
-
-    delete savedClient.password;
 
     return savedClient;
   }
@@ -65,10 +56,7 @@ export class UsersService {
       where: { role: 'EMPLOYEE' },
     });
 
-    return users.map((user) => {
-      delete user.password;
-      return user;
-    });
+    return users;
   }
 
   async findEmployee(id: number) {
@@ -76,8 +64,6 @@ export class UsersService {
       where: { id, role: 'EMPLOYEE' },
       relations: ['route'],
     });
-
-    delete user?.password;
 
     return user;
   }
@@ -88,16 +74,12 @@ export class UsersService {
       relations: ['route'],
     });
 
-    delete user?.password;
-
     return user;
   }
 
   async createEmployee(body: EmployeeDto) {
     const newEmployee = this.userRepository.create(body);
     const savedEmployee = await this.userRepository.save(newEmployee);
-
-    delete savedEmployee.password;
 
     return savedEmployee;
   }

@@ -8,15 +8,21 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Lot } from './lot/lot.entity';
 import { ClientsModule } from './clients/clients.module';
 import { EmployeesModule } from './employees/employees.module';
+import { AuthModule } from './auth/auth.module';
+import { OrdersModule } from './orders/orders.module';
+import { MeModule } from './me/me.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    AuthModule,
     ProductsModule,
     ClientsModule,
     EmployeesModule,
+    OrdersModule,
+    MeModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

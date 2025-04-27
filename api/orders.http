@@ -1,0 +1,67 @@
+### Get all orders
+GET {{url}}/orders
+Content-Type: application/json
+
+### Get order by ID
+GET {{url}}/orders/1
+Content-Type: application/json
+
+### Create new order
+POST {{url}}/orders
+Content-Type: application/json
+
+{
+  "client": {
+    "id": 1
+  },
+  "employeeAssigned": {
+    "id": 2
+  },
+  "address": "123 Main St, City, Country",
+  "dateDelivery": "2023-08-15T14:00:00Z",
+  "statusDelivery": "pending",
+  "typePayment": "credit_card",
+  "statusPayment": "paid",
+  "invoiceNumber": "INV-2023-001",
+  "totalAmount": 150.75,
+  "items": [
+    {
+      "quantity": 2,
+      "product": {
+        "id": 1
+      }
+    },
+    {
+      "quantity": 3,
+      "product": {
+        "id": 2
+      }
+    }
+  ]
+}
+
+### Update order
+PUT {{url}}/orders/1
+Content-Type: application/json
+
+{
+  "statusDelivery": "delivered",
+  "items": [
+    {
+      "quantity": 5,
+      "product": {
+        "id": 1
+      }
+    },
+    {
+      "quantity": 1,
+      "product": {
+        "id": 3
+      }
+    }
+  ]
+}
+
+### Delete order
+DELETE {{url}}/orders/1
+Content-Type: application/json

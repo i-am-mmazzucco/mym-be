@@ -1,28 +1,49 @@
-// src/orders/orders.controller.ts
-import { Controller, Get, Post, Patch, Param, Body } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  Put,
+  ParseIntPipe,
+  UseGuards,
+} from '@nestjs/common';
 import { OrdersService } from './orders.service';
+import { CreateOrderDto, UpdateOrderDto } from './orders.dto';
+import { Order } from './orders.entity';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
+// @UseGuards(JwtAuthGuard)
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
   @Post()
-  createOrder(@Body() orderData: any) {
-    return this.ordersService.createOrder(orderData);
+  create(@Body() createOrderDto: CreateOrderDto): Promise<Order> {
+    return this.ordersService.createOrder(createOrderDto);
   }
 
   @Get()
-  getOrders() {
+  findAll(): Promise<Order[]> {
     return this.ordersService.getOrders();
   }
 
   @Get(':id')
-  getOrder(@Param('id') id: string) {
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<Order> {
     return this.ordersService.getOrder(id);
   }
 
-  @Patch(':id')
-  updateOrder(@Param('id') id: string, @Body() orderData: any) {
-    return this.ordersService.updateOrder(id, orderData);
+  @Put(':id')
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateOrderDto: UpdateOrderDto,
+  ): Promise<Order> {
+    return this.ordersService.updateOrder(id, updateOrderDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.ordersService.deleteOrder(id);
   }
 }

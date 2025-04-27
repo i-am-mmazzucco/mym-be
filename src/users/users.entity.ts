@@ -8,7 +8,6 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { randomPassword } from '../utils/password';
 
 @Entity()
 export class Users {
@@ -26,9 +25,6 @@ export class Users {
 
   @Column()
   phone: string;
-
-  @Column({ nullable: true, default: randomPassword() })
-  password: string;
 
   @Column()
   address: string;

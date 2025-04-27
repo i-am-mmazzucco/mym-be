@@ -46,8 +46,6 @@ export class EmployeesService {
       return this.usersService.findEmployee(newEmployee.id);
     }
 
-    delete newEmployee.password;
-
     return newEmployee;
   }
 

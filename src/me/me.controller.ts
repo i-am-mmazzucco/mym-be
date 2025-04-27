@@ -1,7 +1,9 @@
 // src/me/me.controller.ts
-import { Controller, Get, Patch, Body } from '@nestjs/common';
+import { Controller, Get, Patch, Body, UseGuards } from '@nestjs/common';
 import { MeService } from './me.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
+// @UseGuards(JwtAuthGuard)
 @Controller('me')
 export class MeController {
   constructor(private readonly meService: MeService) {}
