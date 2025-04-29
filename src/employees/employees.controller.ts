@@ -6,6 +6,7 @@ import {
   Param,
   Body,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { EmployeesService } from './employees.service';
 import { EmployeeDto, EmployeeUpdateDto } from './employee.dto';
@@ -17,8 +18,8 @@ export class EmployeesController {
   constructor(private readonly employeesService: EmployeesService) {}
 
   @Get()
-  getEmployees() {
-    return this.employeesService.getEmployees();
+  getEmployees(@Query() query?: { withoutRoutes: boolean }) {
+    return this.employeesService.getEmployees(query);
   }
 
   @Get(':id')

@@ -9,9 +9,9 @@ POST {{url}}/clients
 Content-Type: application/json
 
 {
-  "name": "John",
-  "lastName": "Doe",
-  "dni": "124435675",
+  "name": "Fulanito",
+  "lastName": "Prueba",
+  "dni": "41148747",
   "phone": "555-1234",
   "address": "123 Main St"
 }

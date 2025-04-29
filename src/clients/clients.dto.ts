@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsIn, IsOptional } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
 
 export class ClientDto {
   @IsString()
@@ -18,15 +18,12 @@ export class ClientDto {
   phone: string;
 
   @IsString()
-  @IsOptional()
-  password: string;
-
-  @IsString()
   @IsNotEmpty()
   address: string;
 
-  @IsIn(['CLIENT'])
-  role: 'CLIENT';
+  @IsString()
+  @IsOptional()
+  image: string;
 }
 
 export class ClientUpdateDto {
@@ -39,13 +36,14 @@ export class ClientUpdateDto {
   lastName: string;
 
   @IsString()
-  dni: string;
-
-  @IsString()
   @IsOptional()
   phone: string;
 
   @IsString()
   @IsOptional()
   address: string;
+
+  @IsString()
+  @IsOptional()
+  image: string;
 }

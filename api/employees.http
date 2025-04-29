@@ -11,9 +11,9 @@ POST {{url}}/employees HTTP/1.1
 Content-Type: application/json
 
 {
-  "name": "John",
-  "lastName": "Doe",
-  "dni": "1244356375",
+  "name": "Marcelo",
+  "lastName": "Gomez",
+  "dni": "77563432",
   "phone": "555-1234",
   "address": "123 Main St",
   "role": "EMPLOYEE",

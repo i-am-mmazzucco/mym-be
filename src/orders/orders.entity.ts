@@ -45,6 +45,9 @@ export class Order {
   @Column()
   totalAmount: number;
 
+  @Column({ default: 0 })
+  totalAmountPaid: number;
+
   @OneToMany(() => Item, (item) => item.order, { cascade: true })
   items: Item[];
 

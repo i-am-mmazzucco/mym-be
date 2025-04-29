@@ -2,8 +2,8 @@ import { IsEnum, IsNumber, IsDate, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class LotDto {
-  @IsEnum(['kg', 'g', 'ml', 'l'])
-  unitOfMeasure: 'kg' | 'g' | 'ml' | 'l';
+  @IsEnum(['kg', 'g', 'ml', 'l', 'un'])
+  unitOfMeasure: 'kg' | 'g' | 'ml' | 'l' | 'un';
 
   @IsNumber()
   quantity: number;

@@ -11,6 +11,9 @@ import { EmployeesModule } from './employees/employees.module';
 import { AuthModule } from './auth/auth.module';
 import { OrdersModule } from './orders/orders.module';
 import { MeModule } from './me/me.module';
+import { Item } from './items/items.entity';
+import { Order } from './orders/orders.entity';
+import { Auth } from './auth/auth.entity';
 
 @Module({
   imports: [
@@ -34,7 +37,7 @@ import { MeModule } from './me/me.module';
           username: configService.get<string>('DB_USERNAME'),
           password: configService.get<string>('DB_PASSWORD'),
           database: configService.get<string>('DB_DATABASE'),
-          entities: [Product, Users, Routes, Lot],
+          entities: [Product, Users, Routes, Lot, Order, Auth, Item],
           synchronize: true,
         };
       },

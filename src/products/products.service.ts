@@ -18,11 +18,17 @@ export class ProductsService {
   }
 
   async getProduct(id: string): Promise<Product> {
-    return this.productsRepository.findOne({ where: { id: parseInt(id) } });
+    return this.productsRepository.findOne({
+      where: { id: parseInt(id) },
+      relations: ['lot'],
+    });
   }
 
   async getProductByName(name: string): Promise<Product> {
-    return this.productsRepository.findOne({ where: { name } });
+    return this.productsRepository.findOne({
+      where: { name },
+      relations: ['lot'],
+    });
   }
 
   async createProduct(body: CreateProductBodyDto): Promise<Product> {
@@ -32,7 +38,7 @@ export class ProductsService {
     }
 
     const lot = await this.lotService.createLot(body.lot);
-    const newProduct = this.productsRepository.create(<Product>{
+    const newProduct = this.productsRepository.create({
       name: body.name,
       price: body.price,
       description: body.description,
@@ -48,5 +54,12 @@ export class ProductsService {
   ): Promise<Product> {
     await this.productsRepository.update(id, productData);
     return this.getProduct(id);
+  }
+
+  async findProduct(id: number): Promise<Product> {
+    return this.productsRepository.findOne({
+      where: { id },
+      relations: ['lot'],
+    });
   }
 }

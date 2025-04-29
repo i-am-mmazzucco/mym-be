@@ -51,10 +51,15 @@ export class UsersService {
   }
 
   // employees
-  async findAllEmployees() {
-    const users = await this.userRepository.find({
-      where: { role: 'EMPLOYEE' },
-    });
+  async findAllEmployees({ withoutRoutes }: { withoutRoutes: boolean }) {
+    const query = this.userRepository.createQueryBuilder('user');
+    if (withoutRoutes) {
+      query.where('user.route IS NULL');
+    } else {
+      query.innerJoin('user.route', 'route');
+    }
+
+    const users = await query.getMany();
 
     return users;
   }

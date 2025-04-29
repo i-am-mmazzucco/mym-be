@@ -1,10 +1,12 @@
 import {
   IsArray,
   IsDate,
+  IsIn,
   IsNumber,
   IsOptional,
   IsString,
   ValidateNested,
+  ValidateIf,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { Product } from '../products/product.entity';
@@ -34,15 +36,19 @@ export class CreateOrderDto {
 
   @IsDate()
   @Type(() => Date)
+  @IsOptional()
   dateDelivery: Date;
 
-  @IsString()
+  @IsIn(['pending', 'delivered', 'cancelled'])
+  @IsOptional()
   statusDelivery: string;
 
-  @IsString()
+  @IsIn(['cash', 'credit_card', 'debit_card'])
+  @IsOptional()
   typePayment: string;
 
-  @IsString()
+  @IsIn(['pending', 'paid', 'failed'])
+  @IsOptional()
   statusPayment: string;
 
   @IsString()
@@ -50,7 +56,8 @@ export class CreateOrderDto {
   invoiceNumber?: string;
 
   @IsNumber()
-  totalAmount: number;
+  @ValidateIf((o) => o.statusPayment === 'paid')
+  totalAmountPaid?: number;
 
   @IsArray()
   @ValidateNested({ each: true })

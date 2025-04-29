@@ -15,7 +15,7 @@ export class Lot {
   lotNumber: number;
 
   @Column()
-  unitOfMeasure: 'kg' | 'g' | 'ml' | 'l';
+  unitOfMeasure: 'kg' | 'g' | 'ml' | 'l' | 'un';
 
   @Column()
   quantity: number;

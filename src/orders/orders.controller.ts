@@ -8,6 +8,7 @@ import {
   Put,
   ParseIntPipe,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto, UpdateOrderDto } from './orders.dto';
@@ -25,8 +26,19 @@ export class OrdersController {
   }
 
   @Get()
-  findAll(): Promise<Order[]> {
-    return this.ordersService.getOrders();
+  findAll(@Query('clientId') clientId?: number): Promise<Order[]> {
+    return this.ordersService.getOrders(clientId);
+  }
+
+  @Get('/sales')
+  async getSalesHistory(
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+  ) {
+    return this.ordersService.getSalesHistory(
+      startDate ? new Date(startDate) : undefined,
+      endDate ? new Date(endDate) : undefined,
+    );
   }
 
   @Get(':id')

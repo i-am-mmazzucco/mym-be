@@ -1,6 +1,9 @@
 ### Get all products
 GET {{url}}/products
 
+### Get all products without routes
+GET {{url}}/products?withoutRoutes=true
+
 ### Get a product by ID
 GET {{url}}/products/{{id}}
 
@@ -9,13 +12,13 @@ POST {{url}}/products
 Content-Type: application/json
 
 {
-  "name": "Lavandina",
+  "name": "Jabon liquido",
   "price": 100,
-  "description": "Lavandina para lavar los platos",
-  "category": "Dtergente",
+  "description": "Jabon liquido para lavar las manos",
+  "category": "Jabon",
   "lot": {
-    "unitOfMeasure": "l",
-    "quantity": 1
+    "unitOfMeasure": "un",
+    "quantity": 10
   }
 }
 

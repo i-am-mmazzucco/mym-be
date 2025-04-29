@@ -10,8 +10,8 @@ export class EmployeesService {
     private routesService: RoutesService,
   ) {}
 
-  getEmployees() {
-    return this.usersService.findAllEmployees();
+  getEmployees(query: { withoutRoutes: boolean } = { withoutRoutes: false }) {
+    return this.usersService.findAllEmployees(query);
   }
 
   async getEmployee(id: string) {
@@ -34,9 +34,15 @@ export class EmployeesService {
 
     const { route, ...rest } = body;
 
-    const newEmployee = await this.usersService.createEmployee(
-      rest as EmployeeDto,
-    );
+    const draft = {
+      ...rest,
+      role: 'EMPLOYEE',
+      image: body.image
+        ? body.image
+        : 'https://commons.wikimedia.org/wiki/File:Default_pfp.jpg',
+    } as unknown as EmployeeDto;
+
+    const newEmployee = await this.usersService.createEmployee(draft);
 
     if (route) {
       const newRoute = await this.routesService.create(route);

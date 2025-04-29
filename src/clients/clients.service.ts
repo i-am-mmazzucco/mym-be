@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { ClientDto } from './clients.dto';
+import { ClientDto, ClientUpdateDto } from './clients.dto';
 import { UsersService } from '../users/users.service';
 
 @Injectable()
@@ -25,10 +25,20 @@ export class ClientsService {
       throw new HttpException('Client already exists', HttpStatus.BAD_REQUEST);
     }
 
-    return this.usersService.createClient(body);
+    const draft = {
+      ...body,
+      role: 'CLIENT',
+      image: body.image
+        ? body.image
+        : 'https://commons.wikimedia.org/wiki/File:Default_pfp.jpg',
+    };
+
+    console.log('Llego aca')
+
+    return this.usersService.createClient(draft);
   }
 
-  async updateClient(id: string, body: ClientDto) {
+  async updateClient(id: string, body: ClientUpdateDto) {
     const client = await this.usersService.findClient(+id);
     if (!client) {
       throw new HttpException('Client not found', HttpStatus.NOT_FOUND);
