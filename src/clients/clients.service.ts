@@ -1,22 +1,41 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ClientDto, ClientUpdateDto } from './clients.dto';
 import { UsersService } from '../users/users.service';
+import { OrdersService } from '../orders/orders.service';
 
 @Injectable()
 export class ClientsService {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private ordersService: OrdersService,
+  ) {}
 
   async getClients() {
-    return this.usersService.findAllClients();
-  }
+    const clients = await this.usersService.findAllClients();
+    const clientsWithSales = await Promise.all(
+      clients.map(async (client) => {
+        const salesAverage = await this.getSalesAverage(+client.id);
+        return {
+          ...client,
+          salesAverage,
+        };
+      }),
+    );
 
+    return clientsWithSales;
+  }
   async getClient(id: string) {
     const client = await this.usersService.findClient(+id);
     if (!client) {
       throw new HttpException('Client not found', HttpStatus.NOT_FOUND);
     }
 
-    return client;
+    const salesAverage = await this.getSalesAverage(+id);
+
+    return {
+      ...client,
+      salesAverage,
+    };
   }
 
   async createClient(body: ClientDto) {
@@ -28,12 +47,7 @@ export class ClientsService {
     const draft = {
       ...body,
       role: 'CLIENT',
-      image: body.image
-        ? body.image
-        : 'https://commons.wikimedia.org/wiki/File:Default_pfp.jpg',
     };
-
-    console.log('Llego aca')
 
     return this.usersService.createClient(draft);
   }
@@ -44,6 +58,21 @@ export class ClientsService {
       throw new HttpException('Client not found', HttpStatus.NOT_FOUND);
     }
 
-    return this.usersService.updateClient(+id, body);
+    const updatedClient = await this.usersService.updateClient(+id, body);
+    const salesAverage = await this.getSalesAverage(+id);
+
+    return {
+      ...updatedClient,
+      salesAverage,
+    };
+  }
+
+  private async getSalesAverage(id: number) {
+    const orders = await this.ordersService.getOrders();
+    const clientOrders = await this.ordersService.getOrders(id);
+
+    return `${
+      orders.length > 0 ? (clientOrders.length / orders.length) * 100 : 0
+    }%`;
   }
 }

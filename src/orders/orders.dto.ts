@@ -1,6 +1,5 @@
 import {
   IsArray,
-  IsDate,
   IsIn,
   IsNumber,
   IsOptional,
@@ -34,10 +33,9 @@ export class CreateOrderDto {
   @IsString()
   address: string;
 
-  @IsDate()
   @Type(() => Date)
   @IsOptional()
-  dateDelivery: Date;
+  dateDelivery?: Date;
 
   @IsIn(['pending', 'delivered', 'cancelled'])
   @IsOptional()

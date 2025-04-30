@@ -4,7 +4,7 @@ import {
   UpdateDateColumn,
   CreateDateColumn,
   OneToMany,
-  OneToOne,
+  ManyToOne,
   JoinColumn,
   Column,
 } from 'typeorm';
@@ -16,18 +16,18 @@ export class Order {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => Users)
+  @ManyToOne(() => Users)
   @JoinColumn()
   client: Users;
 
-  @OneToOne(() => Users)
+  @ManyToOne(() => Users)
   @JoinColumn()
   employeeAssigned: Users;
 
   @Column()
   address: string;
 
-  @Column()
+  @Column({ nullable: true })
   dateDelivery: Date;
 
   @Column()

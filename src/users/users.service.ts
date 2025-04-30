@@ -3,7 +3,7 @@ import { Users } from './users.entity';
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { ClientDto, ClientUpdateDto } from '../clients/clients.dto';
-import { EmployeeDto, EmployeeUpdateDto } from 'src/employees/employee.dto';
+import { EmployeeDto, EmployeeUpdateDto } from '../employees/employee.dto';
 
 @Injectable()
 export class UsersService {
@@ -52,11 +52,13 @@ export class UsersService {
 
   // employees
   async findAllEmployees({ withoutRoutes }: { withoutRoutes: boolean }) {
-    const query = this.userRepository.createQueryBuilder('user');
+    const query = this.userRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.route', 'route')
+      .where('user.role = :role', { role: 'EMPLOYEE' });
+
     if (withoutRoutes) {
-      query.where('user.route IS NULL');
-    } else {
-      query.innerJoin('user.route', 'route');
+      query.andWhere('route.id IS NULL');
     }
 
     const users = await query.getMany();

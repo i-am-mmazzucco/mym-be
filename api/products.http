@@ -1,9 +1,6 @@
 ### Get all products
 GET {{url}}/products
 
-### Get all products without routes
-GET {{url}}/products?withoutRoutes=true
-
 ### Get a product by ID
 GET {{url}}/products/{{id}}
 

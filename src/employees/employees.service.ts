@@ -37,9 +37,6 @@ export class EmployeesService {
     const draft = {
       ...rest,
       role: 'EMPLOYEE',
-      image: body.image
-        ? body.image
-        : 'https://commons.wikimedia.org/wiki/File:Default_pfp.jpg',
     } as unknown as EmployeeDto;
 
     const newEmployee = await this.usersService.createEmployee(draft);

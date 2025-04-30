@@ -3,11 +3,11 @@ GET {{url}}/orders
 Content-Type: application/json
 
 ### Get all orders for client
-GET {{url}}/orders?clientId=2
+GET {{url}}/orders?clientId=1
 Content-Type: application/json
 
 ### Get order by ID
-GET {{url}}/orders/1
+GET {{url}}/orders/4
 Content-Type: application/json
 
 ### Get sales history
