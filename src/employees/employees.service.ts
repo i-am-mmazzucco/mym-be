@@ -1,5 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { EmployeeDto, EmployeeUpdateDto } from './employee.dto';
+import {
+  EmployeeDto,
+  EmployeeUpdateDto,
+  SearchEmployeeDto,
+} from './employee.dto';
 import { UsersService } from '../users/users.service';
 import { RoutesService } from '../routes/routes.service';
 
@@ -10,8 +14,9 @@ export class EmployeesService {
     private routesService: RoutesService,
   ) {}
 
-  getEmployees(query: { withoutRoutes: boolean } = { withoutRoutes: false }) {
-    return this.usersService.findAllEmployees(query);
+  getEmployees(query: SearchEmployeeDto) {
+    const { q, withoutRoutes } = query || { withoutRoutes: false };
+    return this.usersService.findAllEmployees({ q, withoutRoutes });
   }
 
   async getEmployee(id: string) {

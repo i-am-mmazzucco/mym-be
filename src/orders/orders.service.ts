@@ -8,10 +8,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Order } from './orders.entity';
 import { Item } from '../items/items.entity';
-import { CreateItemDto, CreateOrderDto, UpdateOrderDto } from './orders.dto';
+import {
+  CreateItemDto,
+  CreateOrderDto,
+  SearchOrderDto,
+  UpdateOrderDto,
+} from './orders.dto';
 import { UsersService } from '../users/users.service';
 import { ProductsService } from '../products/products.service';
-
+import { isDate } from '../helpers/date';
 @Injectable()
 export class OrdersService {
   constructor(
@@ -58,18 +63,41 @@ export class OrdersService {
     return this.ordersRepository.save(order);
   }
 
-  async getOrders(clientId?: number): Promise<Order[]> {
-    const query = this.ordersRepository
+  async getOrders(query: SearchOrderDto): Promise<Order[]> {
+    const { q, clientId } = query || {};
+
+    const queryBuilder = this.ordersRepository
       .createQueryBuilder('order')
       .leftJoinAndSelect('order.client', 'client')
       .leftJoinAndSelect('order.employeeAssigned', 'employeeAssigned')
       .leftJoinAndSelect('order.items', 'items')
-      .leftJoinAndSelect('items.product', 'product');
+      .leftJoinAndSelect('items.product', 'product')
+      .leftJoinAndSelect('product.lot', 'lot');
 
     if (clientId) {
-      query.where('order.clientId = :clientId', { clientId });
+      queryBuilder.andWhere('order.clientId = :clientId', {
+        clientId: +clientId,
+      });
     }
-    return query.getMany();
+
+    if (q) {
+      queryBuilder.andWhere(
+        `(LOWER(client.name) LIKE LOWER(:name) OR 
+          LOWER(client.lastName) LIKE LOWER(:lastName) OR 
+          LOWER(order.statusDelivery) = LOWER(:status)${
+            !isNaN(Number(q)) ? ' OR order.id = :id' : ''
+          }${isDate(q) ? ' OR DATE(order.createdAt) = :date' : ''})`,
+        {
+          name: `%${q}%`,
+          lastName: `%${q}%`,
+          status: q,
+          ...((!isNaN(Number(q)) && { id: +q })),
+          ...(isDate(q) && { date: new Date(q).toISOString().split('T')[0] }),
+        },
+      );
+    }
+
+    return queryBuilder.getMany();
   }
 
   async getSalesHistory(startDate?: Date, endDate?: Date) {

@@ -11,7 +11,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
-import { CreateOrderDto, UpdateOrderDto } from './orders.dto';
+import { CreateOrderDto, SearchOrderDto, UpdateOrderDto } from './orders.dto';
 import { Order } from './orders.entity';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
@@ -25,11 +25,6 @@ export class OrdersController {
     return this.ordersService.createOrder(createOrderDto);
   }
 
-  @Get()
-  findAll(@Query('clientId') clientId?: number): Promise<Order[]> {
-    return this.ordersService.getOrders(clientId);
-  }
-
   @Get('/sales')
   async getSalesHistory(
     @Query('startDate') startDate?: string,
@@ -39,6 +34,11 @@ export class OrdersController {
       startDate ? new Date(startDate) : undefined,
       endDate ? new Date(endDate) : undefined,
     );
+  }
+
+  @Get()
+  findAll(@Query() query: SearchOrderDto): Promise<Order[]> {
+    return this.ordersService.getOrders(query);
   }
 
   @Get(':id')

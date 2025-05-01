@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { ClientDto, ClientUpdateDto } from './clients.dto';
+import { ClientDto, ClientUpdateDto, SearchClientDto } from './clients.dto';
 import { UsersService } from '../users/users.service';
 import { OrdersService } from '../orders/orders.service';
 
@@ -10,8 +10,9 @@ export class ClientsService {
     private ordersService: OrdersService,
   ) {}
 
-  async getClients() {
-    const clients = await this.usersService.findAllClients();
+  async getClients(query: SearchClientDto) {
+    const { q } = query || {};
+    const clients = await this.usersService.findAllClients({ q });
     const clientsWithSales = await Promise.all(
       clients.map(async (client) => {
         const salesAverage = await this.getSalesAverage(+client.id);
@@ -68,8 +69,8 @@ export class ClientsService {
   }
 
   private async getSalesAverage(id: number) {
-    const orders = await this.ordersService.getOrders();
-    const clientOrders = await this.ordersService.getOrders(id);
+    const orders = await this.ordersService.getOrders({});
+    const clientOrders = await this.ordersService.getOrders({ clientId: id });
 
     return `${
       orders.length > 0 ? (clientOrders.length / orders.length) * 100 : 0

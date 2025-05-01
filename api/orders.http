@@ -3,7 +3,7 @@ GET {{url}}/orders
 Content-Type: application/json
 
 ### Get all orders for client
-GET {{url}}/orders?clientId=1
+GET {{url}}/orders?clientId=1&q=4
 Content-Type: application/json
 
 ### Get order by ID

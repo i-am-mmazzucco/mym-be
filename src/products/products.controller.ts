@@ -8,19 +8,20 @@ import {
   UsePipes,
   ValidationPipe,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductBodyDto } from './product.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-
+import { SearchProductDto } from './product.dto';
 // @UseGuards(JwtAuthGuard)
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Get()
-  getProducts() {
-    return this.productsService.getProducts();
+  getProducts(@Query() query: SearchProductDto) {
+    return this.productsService.getProducts(query);
   }
 
   @Get(':id')

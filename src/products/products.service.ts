@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Product } from './product.entity';
-import { CreateProductBodyDto } from './product.dto';
+import { CreateProductBodyDto, SearchProductDto } from './product.dto';
 import { LotService } from '../lot/lot.service';
 
 @Injectable()
@@ -13,8 +13,20 @@ export class ProductsService {
     private lotService: LotService,
   ) {}
 
-  async getProducts(): Promise<Product[]> {
-    return this.productsRepository.find({ relations: ['lot'] });
+  async getProducts(query: SearchProductDto): Promise<Product[]> {
+    const { q } = query || {};
+
+    const queryBuilder = this.productsRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.lot', 'lot');
+
+    if (q) {
+      queryBuilder.andWhere('LOWER(product.name) LIKE LOWER(:name)', {
+        name: `%${q}%`,
+      });
+    }
+
+    return queryBuilder.getMany();
   }
 
   async getProduct(id: string): Promise<Product> {

@@ -6,9 +6,10 @@ import {
   Param,
   Body,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { ClientsService } from './clients.service';
-import { ClientDto } from './clients.dto';
+import { ClientDto, SearchClientDto } from './clients.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 // @UseGuards(JwtAuthGuard)
@@ -17,8 +18,8 @@ export class ClientsController {
   constructor(private readonly clientsService: ClientsService) {}
 
   @Get()
-  getClients() {
-    return this.clientsService.getClients();
+  getClients(@Query() query: SearchClientDto) {
+    return this.clientsService.getClients(query);
   }
 
   @Get(':id')

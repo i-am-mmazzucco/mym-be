@@ -66,3 +66,12 @@ export class CreateOrderDto {
 export class UpdateItemDto extends PartialType(CreateItemDto) {}
 
 export class UpdateOrderDto extends PartialType(CreateOrderDto) {}
+
+export class SearchOrderDto {
+  @IsOptional()
+  @IsString()
+  q?: string;
+
+  @IsOptional()
+  clientId?: number | string;
+}

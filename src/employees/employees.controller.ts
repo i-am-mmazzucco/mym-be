@@ -9,7 +9,11 @@ import {
   Query,
 } from '@nestjs/common';
 import { EmployeesService } from './employees.service';
-import { EmployeeDto, EmployeeUpdateDto } from './employee.dto';
+import {
+  EmployeeDto,
+  EmployeeUpdateDto,
+  SearchEmployeeDto,
+} from './employee.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 // `@UseGuards(JwtAuthGuard)
@@ -18,7 +22,7 @@ export class EmployeesController {
   constructor(private readonly employeesService: EmployeesService) {}
 
   @Get()
-  getEmployees(@Query() query?: { withoutRoutes: boolean }) {
+  getEmployees(@Query() query: SearchEmployeeDto) {
     return this.employeesService.getEmployees(query);
   }
 

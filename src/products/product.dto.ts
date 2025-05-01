@@ -34,3 +34,9 @@ export class CreateProductBodyDto {
   @Type(() => LotDto)
   lot: LotDto;
 }
+
+export class SearchProductDto {
+  @IsOptional()
+  @IsString()
+  q?: string;
+}

@@ -2,8 +2,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from './users.entity';
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { ClientDto, ClientUpdateDto } from '../clients/clients.dto';
-import { EmployeeDto, EmployeeUpdateDto } from '../employees/employee.dto';
+import {
+  ClientDto,
+  ClientUpdateDto,
+  SearchClientDto,
+} from '../clients/clients.dto';
+import {
+  EmployeeDto,
+  EmployeeUpdateDto,
+  SearchEmployeeDto,
+} from '../employees/employee.dto';
 
 @Injectable()
 export class UsersService {
@@ -13,10 +21,22 @@ export class UsersService {
   ) {}
 
   // clients
-  async findAllClients() {
-    const users = await this.userRepository.find({
-      where: { role: 'CLIENT' },
-    });
+  async findAllClients({ q }: SearchClientDto) {
+    const query = this.userRepository
+      .createQueryBuilder('user')
+      .where('user.role = :role', { role: 'CLIENT' });
+
+    if (q) {
+      query.andWhere(
+        '(LOWER(user.name) LIKE LOWER(:searchTerm) OR ' +
+          'LOWER(user.lastName) LIKE LOWER(:searchTerm) OR ' +
+          'LOWER(user.address) LIKE LOWER(:searchTerm) OR ' +
+          'LOWER(user.phone) LIKE LOWER(:searchTerm))',
+        { searchTerm: `%${q}%` },
+      );
+    }
+
+    const users = await query.getMany();
 
     return users;
   }
@@ -51,11 +71,21 @@ export class UsersService {
   }
 
   // employees
-  async findAllEmployees({ withoutRoutes }: { withoutRoutes: boolean }) {
+  async findAllEmployees({ q, withoutRoutes }: SearchEmployeeDto) {
     const query = this.userRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.route', 'route')
       .where('user.role = :role', { role: 'EMPLOYEE' });
+
+    if (q) {
+      query.andWhere(
+        '(LOWER(user.name) LIKE LOWER(:searchTerm) OR ' +
+          'LOWER(user.lastName) LIKE LOWER(:searchTerm) OR ' +
+          'LOWER(user.dni) LIKE LOWER(:searchTerm) OR ' +
+          'LOWER(user.phone) LIKE LOWER(:searchTerm))',
+        { searchTerm: `%${q}%` },
+      );
+    }
 
     if (withoutRoutes) {
       query.andWhere('route.id IS NULL');

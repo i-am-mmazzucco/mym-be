@@ -47,3 +47,9 @@ export class ClientUpdateDto {
   @IsOptional()
   image: string;
 }
+
+export class SearchClientDto {
+  @IsOptional()
+  @IsString()
+  q?: string;
+}

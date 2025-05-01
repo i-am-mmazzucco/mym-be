@@ -1,5 +1,5 @@
 ### Get all clients
-GET {{url}}/clients
+GET {{url}}/clients?q=pepe
 
 ### Get a client by ID
 GET {{url}}/clients/{{id}}
