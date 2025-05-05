@@ -1,12 +1,15 @@
 ### Get all products
 GET {{url}}/products
+Authorization: Bearer {{access_token}}
 
 ### Get a product by ID
 GET {{url}}/products/{{id}}
+Authorization: Bearer {{access_token}}
 
 ### Create a new product
 POST {{url}}/products
 Content-Type: application/json
+Authorization: Bearer {{access_token}}
 
 {
   "name": "Jabon liquido",
@@ -22,6 +25,7 @@ Content-Type: application/json
 ### Update a product by ID
 PATCH {{url}}/products/{{id}}
 Content-Type: application/json
+Authorization: Bearer {{access_token}}
 
 {
   "name": "Updated Product",

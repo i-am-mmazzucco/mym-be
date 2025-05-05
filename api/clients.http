@@ -1,12 +1,15 @@
 ### Get all clients
 GET {{url}}/clients?q=pepe
+Authorization: Bearer {{access_token}}
 
 ### Get a client by ID
-GET {{url}}/clients/{{id}}
+GET {{url}}/clients/1
+Authorization: Bearer {{access_token}}
 
 ### Create a new client
 POST {{url}}/clients
 Content-Type: application/json
+Authorization: Bearer {{access_token}}
 
 {
   "name": "Fulanito",
@@ -19,6 +22,7 @@ Content-Type: application/json
 ### Update a client by ID
 PATCH {{url}}/clients/{{id}}
 Content-Type: application/json
+Authorization: Bearer {{access_token}}
 
 {
   "name": "Jane",

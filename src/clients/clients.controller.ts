@@ -12,7 +12,7 @@ import { ClientsService } from './clients.service';
 import { ClientDto, SearchClientDto } from './clients.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
-// @UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 @Controller('clients')
 export class ClientsController {
   constructor(private readonly clientsService: ClientsService) {}

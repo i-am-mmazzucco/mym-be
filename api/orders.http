@@ -1,22 +1,27 @@
 ### Get all orders
 GET {{url}}/orders
 Content-Type: application/json
+Authorization: Bearer {{access_token}}
 
 ### Get all orders for client
 GET {{url}}/orders?clientId=1&q=4
 Content-Type: application/json
+Authorization: Bearer {{access_token}}
 
 ### Get order by ID
 GET {{url}}/orders/4
 Content-Type: application/json
+Authorization: Bearer {{access_token}}
 
 ### Get sales history
 GET {{url}}/orders/sales?startDate=2024-01-01&endDate=2026-01-31
 Content-Type: application/json
+Authorization: Bearer {{access_token}}
 
 ### Create new order
 POST {{url}}/orders
 Content-Type: application/json
+Authorization: Bearer {{access_token}}
 
 {
   "client": {
@@ -41,6 +46,7 @@ Content-Type: application/json
 ### Update order
 PUT {{url}}/orders/1
 Content-Type: application/json
+Authorization: Bearer {{access_token}}
 
 {
   "statusDelivery": "delivered",
@@ -63,3 +69,4 @@ Content-Type: application/json
 ### Delete order
 DELETE {{url}}/orders/1
 Content-Type: application/json
+Authorization: Bearer {{access_token}}

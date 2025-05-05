@@ -1,18 +1,22 @@
 ### Get all employees
 GET {{url}}/employees HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer {{access_token}}
 
 ### Get all employees without routes
 GET {{url}}/employees?withoutRoutes=true HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer {{access_token}}
 
 ### Get employee by ID
 GET {{url}}/employees/6 HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer {{access_token}}
 
 ### Create new employee
 POST {{url}}/employees HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer {{access_token}}
 
 {
   "name": "Manuel",
@@ -26,6 +30,7 @@ Content-Type: application/json
 ### Update employee
 PATCH {{url}}/employees/6 HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer {{access_token}}
 
 {
   "order": {
@@ -42,3 +47,4 @@ Content-Type: application/json
 ### Delete employee
 DELETE {{url}}/employees/1 HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer {{access_token}}

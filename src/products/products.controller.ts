@@ -14,7 +14,8 @@ import { ProductsService } from './products.service';
 import { CreateProductBodyDto, UpdateProductBodyDto } from './product.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { SearchProductDto } from './product.dto';
-// @UseGuards(JwtAuthGuard)
+
+@UseGuards(JwtAuthGuard)
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}

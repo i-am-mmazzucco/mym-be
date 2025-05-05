@@ -15,7 +15,7 @@ import { CreateOrderDto, SearchOrderDto, UpdateOrderDto } from './orders.dto';
 import { Order } from './orders.entity';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
-// @UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
