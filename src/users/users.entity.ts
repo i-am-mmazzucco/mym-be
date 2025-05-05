@@ -3,10 +3,9 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  OneToOne,
-  JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Entity()
@@ -35,12 +34,8 @@ export class Users {
   @Column()
   role: 'CLIENT' | 'EMPLOYEE' | 'ADMIN';
 
-  @OneToOne(() => Routes)
-  @JoinColumn()
-  route: Routes;
-
-  @Column({ nullable: true })
-  routeId: number;
+  @OneToMany(() => Routes, (route) => route.employee)
+  routes: Routes[];
 
   @CreateDateColumn()
   createdAt: Date;

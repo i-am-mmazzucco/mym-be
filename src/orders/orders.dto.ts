@@ -65,7 +65,15 @@ export class CreateOrderDto {
 
 export class UpdateItemDto extends PartialType(CreateItemDto) {}
 
-export class UpdateOrderDto extends PartialType(CreateOrderDto) {}
+export class UpdateOrderDto extends PartialType(CreateOrderDto) {
+  @IsNumber()
+  @IsOptional()
+  totalAmount?: number;
+
+  @IsNumber()
+  @IsOptional()
+  routeId?: number;
+}
 
 export class SearchOrderDto {
   @IsOptional()

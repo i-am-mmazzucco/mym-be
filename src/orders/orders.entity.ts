@@ -7,9 +7,11 @@ import {
   ManyToOne,
   JoinColumn,
   Column,
+  OneToOne,
 } from 'typeorm';
 import { Item } from '../items/items.entity';
 import { Users } from '../users/users.entity';
+import { Routes } from '../routes/routes.entity';
 
 @Entity()
 export class Order {
@@ -56,4 +58,8 @@ export class Order {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToOne(() => Routes, (route) => route.order, { nullable: true })
+  @JoinColumn()
+  route: Routes;
 }

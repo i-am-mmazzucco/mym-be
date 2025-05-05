@@ -72,7 +72,8 @@ export class OrdersService {
       .leftJoinAndSelect('order.employeeAssigned', 'employeeAssigned')
       .leftJoinAndSelect('order.items', 'items')
       .leftJoinAndSelect('items.product', 'product')
-      .leftJoinAndSelect('product.lot', 'lot');
+      .leftJoinAndSelect('product.lot', 'lot')
+      .leftJoinAndSelect('order.route', 'route');
 
     if (clientId) {
       queryBuilder.andWhere('order.clientId = :clientId', {
@@ -91,7 +92,7 @@ export class OrdersService {
           name: `%${q}%`,
           lastName: `%${q}%`,
           status: q,
-          ...((!isNaN(Number(q)) && { id: +q })),
+          ...(!isNaN(Number(q)) && { id: +q }),
           ...(isDate(q) && { date: new Date(q).toISOString().split('T')[0] }),
         },
       );
@@ -143,6 +144,7 @@ export class OrdersService {
         'items',
         'items.product',
         'items.product.lot',
+        'route',
       ],
     });
 
@@ -157,12 +159,52 @@ export class OrdersService {
     id: number,
     updateOrderDto: UpdateOrderDto,
   ): Promise<Order> {
+    const oldOrder = await this.getOrder(id);
+
+    await this.validateItems(updateOrderDto.items);
+
+    const items = [];
+    let totalAmount = 0;
+
+    for (const item of updateOrderDto.items) {
+      const product = await this.productsService.findProduct(item.product.id);
+      const draftItem = this.itemsRepository.create({
+        ...item,
+        product: product,
+      });
+      const savedItem = await this.itemsRepository.save(draftItem);
+      items.push(savedItem);
+      totalAmount += product.price * item.quantity;
+    }
+
+    const draft = {
+      ...updateOrderDto,
+      statusDelivery:
+        updateOrderDto.statusDelivery || oldOrder.statusDelivery || 'pending',
+      statusPayment:
+        updateOrderDto.statusPayment || oldOrder.statusPayment || 'pending',
+      typePayment: updateOrderDto.typePayment || oldOrder.typePayment || 'cash',
+      totalAmount:
+        updateOrderDto.totalAmount || oldOrder.totalAmount || totalAmount,
+      totalAmountPaid:
+        updateOrderDto.totalAmountPaid ||
+        oldOrder.totalAmountPaid ||
+        totalAmount,
+      items,
+    };
+
+    await this.ordersRepository.update(oldOrder.id, draft as Order);
+
+    return this.getOrder(id);
+  }
+
+  async setOrderRoute(id: number, routeId: number): Promise<Order> {
     const order = await this.getOrder(id);
-
-    // Update order fields
-    Object.assign(order, updateOrderDto);
-
-    return this.ordersRepository.save(order);
+    const draft = this.ordersRepository.create({
+      ...order,
+      route: { id: routeId },
+    });
+    return this.ordersRepository.save(draft);
   }
 
   async deleteOrder(id: number): Promise<void> {

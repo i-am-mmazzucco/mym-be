@@ -11,7 +11,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { CreateProductBodyDto } from './product.dto';
+import { CreateProductBodyDto, UpdateProductBodyDto } from './product.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { SearchProductDto } from './product.dto';
 // @UseGuards(JwtAuthGuard)
@@ -36,7 +36,10 @@ export class ProductsController {
   }
 
   @Patch(':id')
-  updateProduct(@Param('id') id: string, @Body() productData: any) {
+  updateProduct(
+    @Param('id') id: string,
+    @Body() productData: UpdateProductBodyDto,
+  ) {
     return this.productsService.updateProduct(id, productData);
   }
 }

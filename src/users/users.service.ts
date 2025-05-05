@@ -74,7 +74,7 @@ export class UsersService {
   async findAllEmployees({ q, withoutRoutes }: SearchEmployeeDto) {
     const query = this.userRepository
       .createQueryBuilder('user')
-      .leftJoinAndSelect('user.route', 'route')
+      .leftJoinAndSelect('user.routes', 'routes')
       .where('user.role = :role', { role: 'EMPLOYEE' });
 
     if (q) {
@@ -88,7 +88,7 @@ export class UsersService {
     }
 
     if (withoutRoutes) {
-      query.andWhere('route.id IS NULL');
+      query.andWhere('user.routes.id IS NULL');
     }
 
     const users = await query.getMany();
@@ -99,7 +99,7 @@ export class UsersService {
   async findEmployee(id: number) {
     const user = await this.userRepository.findOne({
       where: { id, role: 'EMPLOYEE' },
-      relations: ['route'],
+      relations: ['routes'],
     });
 
     return user;
@@ -108,21 +108,25 @@ export class UsersService {
   async findEmployeeByDni(dni: string) {
     const user = await this.userRepository.findOne({
       where: { dni, role: 'EMPLOYEE' },
-      relations: ['route'],
+      relations: ['routes'],
     });
 
     return user;
   }
 
   async createEmployee(body: EmployeeDto) {
-    const newEmployee = this.userRepository.create(body);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { routes, ...rest } = body;
+    const newEmployee = this.userRepository.create(rest);
     const savedEmployee = await this.userRepository.save(newEmployee);
 
     return savedEmployee;
   }
 
   async updateEmployee(id: number, body: EmployeeUpdateDto) {
-    await this.userRepository.update(id, body);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { routes, order, ...rest } = body;
+    await this.userRepository.update(id, rest);
 
     return this.findEmployee(id);
   }

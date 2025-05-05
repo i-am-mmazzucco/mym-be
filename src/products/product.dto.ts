@@ -40,3 +40,21 @@ export class SearchProductDto {
   @IsString()
   q?: string;
 }
+
+export class UpdateProductBodyDto {
+  @IsString()
+  @IsOptional()
+  name?: string;
+
+  @IsString()
+  @IsOptional()
+  description?: string;
+
+  @IsString()
+  @IsOptional()
+  category?: string;
+
+  @IsNumber()
+  @IsOptional()
+  quantity?: number;
+}

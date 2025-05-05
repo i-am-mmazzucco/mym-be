@@ -2,7 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Product } from './product.entity';
-import { CreateProductBodyDto, SearchProductDto } from './product.dto';
+import {
+  CreateProductBodyDto,
+  SearchProductDto,
+  UpdateProductBodyDto,
+} from './product.dto';
 import { LotService } from '../lot/lot.service';
 
 @Injectable()
@@ -62,10 +66,23 @@ export class ProductsService {
 
   async updateProduct(
     id: string,
-    productData: Partial<Product>,
+    productData: UpdateProductBodyDto,
   ): Promise<Product> {
-    await this.productsRepository.update(id, productData);
-    return this.getProduct(id);
+    const product = await this.getProduct(id);
+    if (!product) {
+      throw new Error('Product not found');
+    }
+    const draft = {
+      name: productData.name || product.name,
+      description: productData.description || product.description,
+      category: productData.category || product.category,
+      lot: {
+        ...product.lot,
+        quantity: productData.quantity || product.lot.quantity,
+      },
+    };
+    await this.productsRepository.update(id, draft);
+    return this.findProduct(+id);
   }
 
   async findProduct(id: number): Promise<Product> {
