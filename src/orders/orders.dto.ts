@@ -6,22 +6,13 @@ import {
   IsString,
   ValidateNested,
   ValidateIf,
+  IsNotEmptyObject,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { Product } from '../products/product.entity';
-import { PartialType } from '@nestjs/mapped-types';
 import { Users } from '../users/users.entity';
 
-export class CreateItemDto {
-  @IsNumber()
-  quantity: number;
-
-  @ValidateNested()
-  @Type(() => Product)
-  product: Product;
-}
-
-export class CreateOrderDto {
+class BaserOrderDto {
   @ValidateNested()
   @Type(() => Users)
   client: Users;
@@ -56,16 +47,40 @@ export class CreateOrderDto {
   @IsNumber()
   @ValidateIf((o) => o.statusPayment === 'paid')
   totalAmountPaid?: number;
+}
 
+export class CreateItemDto {
+  @IsNumber()
+  quantity: number;
+
+  @ValidateNested()
+  @Type(() => Product)
+  product: Product;
+}
+
+export class CreateOrderDto extends BaserOrderDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateItemDto)
   items: CreateItemDto[];
 }
 
-export class UpdateItemDto extends PartialType(CreateItemDto) {}
+class ProductIdDto {
+  @IsNumber()
+  id: number;
+}
 
-export class UpdateOrderDto extends PartialType(CreateOrderDto) {
+export class UpdateItemDto {
+  @IsNotEmptyObject()
+  @ValidateNested()
+  @Type(() => ProductIdDto)
+  product: ProductIdDto;
+
+  @IsNumber()
+  quantity: number;
+}
+
+export class UpdateOrderDto extends BaserOrderDto {
   @IsNumber()
   @IsOptional()
   totalAmount?: number;
@@ -73,6 +88,11 @@ export class UpdateOrderDto extends PartialType(CreateOrderDto) {
   @IsNumber()
   @IsOptional()
   routeId?: number;
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => UpdateItemDto)
+  items: UpdateItemDto[];
 }
 
 export class SearchOrderDto {

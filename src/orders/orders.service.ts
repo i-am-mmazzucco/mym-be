@@ -12,6 +12,7 @@ import {
   CreateItemDto,
   CreateOrderDto,
   SearchOrderDto,
+  UpdateItemDto,
   UpdateOrderDto,
 } from './orders.dto';
 import { UsersService } from '../users/users.service';
@@ -167,14 +168,31 @@ export class OrdersService {
     let totalAmount = 0;
 
     for (const item of updateOrderDto.items) {
-      const product = await this.productsService.findProduct(item.product.id);
-      const draftItem = this.itemsRepository.create({
-        ...item,
-        product: product,
-      });
-      const savedItem = await this.itemsRepository.save(draftItem);
-      items.push(savedItem);
-      totalAmount += product.price * item.quantity;
+      const oldItem = oldOrder.items.find(
+        (i) => i.product.id === item.product.id,
+      );
+
+      if (oldItem && oldItem.quantity !== item.quantity) {
+        const draftItem = this.itemsRepository.create({
+          ...oldItem,
+          quantity: item.quantity,
+        });
+        const savedItem = await this.itemsRepository.save(draftItem);
+        items.push(savedItem);
+        totalAmount += oldItem.product.price * item.quantity;
+      } else if (!oldItem) {
+        const product = await this.productsService.findProduct(item.product.id);
+        const draftItem = this.itemsRepository.create({
+          ...item,
+          product: product,
+        });
+        const savedItem = await this.itemsRepository.save(draftItem);
+        items.push(savedItem);
+        totalAmount += product.price * item.quantity;
+      } else {
+        items.push(oldItem);
+        totalAmount += oldItem.product.price * oldItem.quantity;
+      }
     }
 
     const draft = {
@@ -193,7 +211,20 @@ export class OrdersService {
       items,
     };
 
-    await this.ordersRepository.update(oldOrder.id, draft as Order);
+    const { items: newItems, ...orderData } = draft;
+
+    await this.ordersRepository.update(oldOrder.id, orderData as Order);
+
+    await this.itemsRepository.delete({ order: { id: oldOrder.id } });
+    for (const item of newItems) {
+      const product = await this.productsService.findProduct(item.product.id);
+      const newItem = this.itemsRepository.create({
+        ...item,
+        product,
+        order: oldOrder,
+      });
+      await this.itemsRepository.save(newItem);
+    }
 
     return this.getOrder(id);
   }
@@ -231,7 +262,7 @@ export class OrdersService {
     return client;
   }
 
-  private async validateItems(items: CreateItemDto[]) {
+  private async validateItems(items: CreateItemDto[] | UpdateItemDto[]) {
     for (const item of items) {
       const product = await this.productsService.findProduct(item.product.id);
       if (!product) {
