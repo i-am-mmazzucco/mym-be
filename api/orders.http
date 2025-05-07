@@ -9,12 +9,12 @@ Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 ### Get order by ID
-GET {{url}}/orders/4
+GET {{url}}/orders/2
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 ### Get sales history
-GET {{url}}/orders/sales?startDate=2024-01-01&endDate=2026-01-31
+GET {{url}}/orders/sales?startDate=2025-04-06&endDate=2025-05-08
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 

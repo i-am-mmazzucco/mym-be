@@ -10,17 +10,18 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { Product } from '../products/product.entity';
-import { Users } from '../users/users.entity';
+
+class ClientIdDto {
+  @IsNumber()
+  id: number;
+}
+
+class EmployeeAssignedIdDto {
+  @IsNumber()
+  id: number;
+}
 
 class BaserOrderDto {
-  @ValidateNested()
-  @Type(() => Users)
-  client: Users;
-
-  @ValidateNested()
-  @Type(() => Users)
-  employeeAssigned: Users;
-
   @IsString()
   address: string;
 
@@ -59,10 +60,20 @@ export class CreateItemDto {
 }
 
 export class CreateOrderDto extends BaserOrderDto {
+  @ValidateNested()
+  @Type(() => ClientIdDto)
+  @IsOptional()
+  client: ClientIdDto;
+
+  @ValidateNested()
+  @Type(() => EmployeeAssignedIdDto)
+  @IsOptional()
+  employeeAssigned: EmployeeAssignedIdDto;
+
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => CreateItemDto)
-  items: CreateItemDto[];
+  @Type(() => UpdateItemDto)
+  items: UpdateItemDto[];
 }
 
 class ProductIdDto {

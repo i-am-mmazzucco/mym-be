@@ -122,7 +122,7 @@ export class OrdersService {
       .orderBy('totalsold', 'DESC');
 
     if (startDate && endDate) {
-      query.where('order.createdAt BETWEEN :start AND :end', {
+      query.where('order.createdAt >= :start AND order.createdAt < :end', {
         start: startDate,
         end: endDate,
       });
